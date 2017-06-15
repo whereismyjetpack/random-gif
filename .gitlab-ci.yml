@@ -16,7 +16,7 @@ build:
   tags:
     - docker
 
-deploy:
+deploy_dev:
   stage: deploy
   script:
     - kubectl apply -f random-gif-dev.yml
@@ -27,7 +27,7 @@ deploy:
     name: development
     url: https://dev.random-gif.k8s.psu.edu
 
-deploy:
+deploy_prod:
   stage: deploy
   script:
     - kubectl apply -f random-gif-prod.yml

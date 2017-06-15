@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: random-gif-dev
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: random-gif
+        environment: dev
+    spec:
+      containers:
+      - name: random-gif
+        image: nexus.ci.psu.edu:5000/djb44/gif:develop
+        env:
+          - name: HTTP_PROXY
+            value: "http://proxy.aset.psu.edu:8080"
+          - name: HTTPS_PROXY
+            value: "http://proxy.aset.psu.edu:8080"
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          periodSeconds: 10
+          initialDelaySeconds: 15
+      imagePullSecrets:
+        - name: nexus
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: random-gif-dev
+spec:
+  selector:
+    app: random-gif
+    environment: dev
+  ports:
+    - port: 8080
+      targetPort: 8080
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: random-gif-dev
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: dev.random-gif.k8s.psu.edu
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: random-gif-dev
+          servicePort: 8080

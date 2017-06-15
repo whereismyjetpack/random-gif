@@ -16,7 +16,7 @@ build:
   tags:
     - docker
 
-deploy:
+deploy_dev:
   stage: deploy
   script:
     - kubectl apply -f random-gif-dev.yml
@@ -27,3 +27,13 @@ deploy:
     name: development
     url: https://dev.random-gif.k8s.psu.edu
 
+deploy_prod:
+  stage: deploy
+  script:
+    - kubectl apply -f random-gif-prod.yml
+    - kubectl set image deployment/random-gif-prod random-gif=nexus.ci.psu.edu:5000/djb44/random:$CI_COMMIT_SHA
+  only:
+    - master
+  environment:
+    name: prod
+    url: https://random-gif.k8s.psu.edu

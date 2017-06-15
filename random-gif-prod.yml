@@ -2,14 +2,14 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: random-gif-dev
+  name: random-gif-prod
 spec:
   replicas: 2
   template:
     metadata:
       labels:
         app: random-gif
-        environment: dev
+        environment: prod
     spec:
       containers:
       - name: random-gif
@@ -27,11 +27,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: random-gif-dev
+  name: random-gif-prod
 spec:
   selector:
     app: random-gif
-    environment: dev
+    environment: prod
   ports:
     - port: 8080
       targetPort: 8080
@@ -40,15 +40,15 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: random-gif-dev
+  name: random-gif-prod
   annotations:
     kubernetes.io/ingress.class: traefik
 spec:
   rules:
-  - host: dev.random-gif.k8s.psu.edu
+  - host: random-gif.k8s.psu.edu
     http:
       paths:
       - path: /
         backend:
-          serviceName: random-gif-dev
+          serviceName: random-gif-prod
           servicePort: 8080

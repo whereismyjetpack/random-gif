@@ -1,0 +1,27 @@
+# Default values for random-gif.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 2
+image:
+  repository: nexus.ci.psu.edu:5000/djb44/gif
+  tag: master
+  pullPolicy: Always
+service:
+  name: random-gif
+  type: ClusterIP
+  externalPort: 8080
+  internalPort: 8080
+ingress:
+  enabled: true
+  # Used to create Ingress record (should used with service.type: ClusterIP).
+  hosts:
+    - prod.random-gif.k8s.psu.edu
+  annotations:
+    kubernetes.io/ingress.class: traefik
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi

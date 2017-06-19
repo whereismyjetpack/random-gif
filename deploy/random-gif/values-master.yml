@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 replicaCount: 2
 image:
-  repository: nexus.ci.psu.edu:5000/djb44/gif
+  repository: nexus.ci.psu.edu:5000/djb44/random
   tag: master
   pullPolicy: Always
 service:

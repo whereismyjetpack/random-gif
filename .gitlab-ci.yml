@@ -11,7 +11,7 @@ build:
   script:
     - export HTTP_PROXY=http://proxy.aset.psu.edu:8080
     - export HTTPS_PROXY=http://proxy.aset.psu.edu:8080
-    - docker build -t nexus.ci.psu.edu:5000/djb44/random:$CI_COMMIT_SHA .
+    - docker build -t nexus.ci.psu.edu:5000/djb44/random:$CI_COMMIT_REF_NAME .
     - docker push nexus.ci.psu.edu:5000/djb44/random
   tags:
     - docker
@@ -19,21 +19,7 @@ build:
 deploy_dev:
   stage: deploy
   script:
-    - kubectl apply -f random-gif-dev.yml
-    - kubectl set image deployment/random-gif-dev random-gif=nexus.ci.psu.edu:5000/djb44/random:$CI_COMMIT_SHA
-  only:
-    - develop
+    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f deploy/random-gif/values-$CI_COMMIT_REF_NAME.yml
   environment:
-    name: development
+    name: $CI_COMMIT_REF_NAME
     url: https://dev.random-gif.k8s.psu.edu
-
-deploy_prod:
-  stage: deploy
-  script:
-    - kubectl apply -f random-gif-prod.yml
-    - kubectl set image deployment/random-gif-prod random-gif=nexus.ci.psu.edu:5000/djb44/random:$CI_COMMIT_SHA
-  only:
-    - master
-  environment:
-    name: prod
-    url: https://random-gif.k8s.psu.edu

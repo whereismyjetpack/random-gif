@@ -17,8 +17,6 @@ spec:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         env:
-          - name: CI_BUILD_ID
-            value: "$CI_BUILD_ID"
           - name: HTTP_PROXY
             value: "http://proxy.aset.psu.edu:8080"
           - name: HTTPS_PROXY

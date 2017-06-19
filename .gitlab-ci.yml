@@ -19,7 +19,7 @@ build:
 deploy_dev:
   stage: deploy
   script:
-    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f deploy/values-$CI_COMMIT_REF_NAME
+    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f deploy/values-$CI_COMMIT_REF_NAME.yml
   environment:
     name: $CI_COMMIT_REF_NAME
     url: https://dev.random-gif.k8s.psu.edu

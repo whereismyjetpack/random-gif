@@ -19,7 +19,19 @@ build:
 deploy_dev:
   stage: deploy
   script:
-    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f deploy/random-gif/values-$CI_COMMIT_REF_NAME.yml --wait --set image.tag=$CI_COMMIT_SHA
+    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f deploy/random-gif/values-$CI_COMMIT_REF_NAME.yml --wait --set image.tag=$CI_COMMIT_SHA --set 
+  only:
+    - develop
   environment:
-    name: $CI_COMMIT_REF_NAME
-    url: https://dev.random-gif.k8s.psu.edu
+    name: develop
+    url: dev.random-gif.k8s.psu.edu
+
+deploy_dev:
+  stage: deploy
+  script:
+    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f deploy/random-gif/values-$CI_COMMIT_REF_NAME.yml --wait --set image.tag=$CI_COMMIT_SHA --set 
+  only:
+    - master
+  environment:
+    name: prod
+    url: prod.random-gif.k8s.psu.edu

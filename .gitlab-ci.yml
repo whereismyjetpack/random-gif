@@ -19,7 +19,7 @@ build:
 deploy_dev:
   stage: deploy
   script:
-    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f deploy/random-gif/values-$CI_COMMIT_REF_NAME.yml --wait --set image.tag=$CI_COMMIT_SHA
+    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f values-$CI_COMMIT_REF_NAME.yml --wait --set image.tag=$CI_COMMIT_SHA
   only:
     - develop
   environment:
@@ -29,7 +29,7 @@ deploy_dev:
 deploy_prod:
   stage: deploy
   script:
-    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f deploy/random-gif/values-$CI_COMMIT_REF_NAME.yml --wait --set image.tag=$CI_COMMIT_SHA 
+    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f values-$CI_COMMIT_REF_NAME.yml --wait --set image.tag=$CI_COMMIT_SHA 
   only:
     - master
   environment:

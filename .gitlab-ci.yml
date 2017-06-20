@@ -23,7 +23,7 @@ deploy_dev:
   only:
     - develop
   environment:
-    name: develop
+    name: development
     url: dev.random-gif.k8s.psu.edu
 
 deploy_prod:

@@ -19,17 +19,19 @@ build:
 deploy_dev:
   stage: deploy
   script:
-    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f values-$CI_COMMIT_REF_NAME.yml --wait --set image.tag=$CI_COMMIT_SHA
+    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f values-$CI_COMMIT_REF_NAME.yml --wait --set image.tag=$CI_COMMIT_SHA --set ingress.hosts={$CI_COMMIT_REF_NAME.k8s.psu.edu}
   only:
-    - develop
+    - branches
+  except:
+    - master
   environment:
-    name: development
-    url: dev.random-gif.k8s.psu.edu
+    name: $CI_COMMIT_REF_NAME
+    url: $CI_COMMIT_REF_NAME.random-gif.k8s.psu.edu
 
 deploy_prod:
   stage: deploy
   script:
-    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f values-$CI_COMMIT_REF_NAME.yml --wait --set image.tag=$CI_COMMIT_SHA 
+    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f values-$CI_COMMIT_REF_NAME.yml --wait --set image.tag=$CI_COMMIT_SHA
   only:
     - master
   environment:

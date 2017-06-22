@@ -21,6 +21,7 @@ stop_environment:
   stage: deploy
   variables:
     GIT_STRATEGY: none
+  when: manual
   script:
     - helm delete random-gif-$CI_COMMIT_REF_NAME
   environment:

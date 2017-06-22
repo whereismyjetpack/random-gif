@@ -26,7 +26,7 @@ deploy_dev:
     - master
   environment:
     name: $CI_COMMIT_REF_NAME
-    url: $CI_COMMIT_REF_NAME.random-gif.k8s.psu.edu
+    url: https://$CI_COMMIT_REF_NAME.random-gif.k8s.psu.edu
 
 deploy_prod:
   stage: deploy

@@ -23,6 +23,9 @@ stop_environment:
     GIT_STRATEGY: none
   script:
     - helm delete random-gif-$CI_COMMIT_REF_NAME
+  environment:
+    name: $CI_COMMIT_REF_NAME
+    action: stop
 
 deploy_nonprod:
   stage: deploy

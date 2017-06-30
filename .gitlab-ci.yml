@@ -5,6 +5,7 @@ cache:
 stages:
   - build
   - deploy
+  - backup
 
 build:
   stage: build
@@ -50,3 +51,9 @@ deploy_prod:
   environment:
     name: prod
     url: prod.random-gif.k8s.psu.edu
+
+
+backup:
+  stage: backup
+  script:
+    - kubectl get deployment random-gif-$CI_COMMIT_REF_NAME-random-gif -o yaml --export 

@@ -32,11 +32,9 @@ stop_environment:
 deploy_nonprod:
   stage: deploy
   script:
-    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f values.yml --wait --set image.tag=$CI_COMMIT_SHA --set ingress.hosts={$CI_COMMIT_REF_NAME.random-gif.k8s.psu.edu}
+    - helm upgrade --install random-gif-$CI_COMMIT_REF_NAME deploy/random-gif -f values.yml --wait --set image.tag=$CI_COMMIT_TAG --set ingress.hosts={$CI_COMMIT_REF_NAME.random-gif.k8s.psu.edu}
   only:
-    - branches
-  except:
-    - master
+    - tags
   environment:
     name: $CI_COMMIT_REF_NAME
     url: https://$CI_COMMIT_REF_NAME.random-gif.k8s.psu.edu

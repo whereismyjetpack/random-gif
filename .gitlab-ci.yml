@@ -12,8 +12,10 @@ build:
   script:
     - export HTTP_PROXY=http://proxy.aset.psu.edu:8080
     - export HTTPS_PROXY=http://proxy.aset.psu.edu:8080
-    - docker build -t nexus.ci.psu.edu:5000/djb44/random:$CI_COMMIT_SHA .
+    - docker build -t nexus.ci.psu.edu:5000/djb44/random:$CI_COMMIT_TAG .
     - docker push nexus.ci.psu.edu:5000/djb44/random
+  only:
+    - tags
   tags:
     - docker
 

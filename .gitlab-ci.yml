@@ -37,7 +37,7 @@ stop_dev:
 deploy_dev:
   stage: deploy
   script:
-    - helm upgrade --install random-gif-dev deploy/random-gif -f values-dev.yml --wait --set image.tag=$CI_COMMIT_SHA
+    - helm upgrade --install random-gif-dev deploy/random-gif -f values-dev.yml --wait --set
     name: dev
     url: https://dev.random-gif.k8s.psu.edu
     on_stop: stop_dev

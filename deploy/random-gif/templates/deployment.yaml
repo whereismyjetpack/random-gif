@@ -4,7 +4,6 @@ metadata:
   name: {{ template "fullname" . }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    jobid: "{{ .Values.jobid }}"
 spec:
   replicas: {{ .Values.replicaCount }}
   template:

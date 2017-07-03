@@ -1,2 +1,0 @@
-values-*.yaml filter=git-crypt diff=git-crypt
-values-*.yml filter=git-crypt diff=git-crypt

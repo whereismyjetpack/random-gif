@@ -10,6 +10,7 @@ spec:
     metadata:
       labels:
         app: {{ template "fullname" . }}
+        jobid: "{{ .Values.jobid }}"
     spec:
       imagePullSecrets:
         - name: nexus

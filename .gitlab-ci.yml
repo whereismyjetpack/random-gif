@@ -7,6 +7,12 @@ stages:
   - deploy
   - backup
 
+before_script:
+  - git-crypt unlock
+
+after_script:
+  - git-crypt lock
+
 build:
   stage: build
   script:

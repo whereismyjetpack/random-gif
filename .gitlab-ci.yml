@@ -20,8 +20,6 @@ build:
     - export HTTPS_PROXY=http://proxy.aset.psu.edu:8080
     - docker build -t nexus.ci.psu.edu:5000/djb44/random:$CI_COMMIT_REF_NAME .
     - docker push nexus.ci.psu.edu:5000/djb44/random
-  only:
-    - tags
   tags:
     - docker
 
@@ -40,7 +38,7 @@ deploy_dev:
   stage: deploy
   script:
     # - env
-    - helm upgrade --install random-gif-dev deploy/random-gif -f values-dev.yml --wait
+    - helm upgrade --install random-gif-dev deploy/random-gif -f values-dev.yml --wait --set jobid=$CI_JOB_ID
   only:
     - develop
   environment:

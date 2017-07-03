@@ -37,7 +37,7 @@ deploy_dev:
   only:
     - tags
     - develop
-   environment:
-     name: dev
-     url: https://dev.random-gif.k8s.psu.edu
-     on_stop: stop_dev
+  environment:
+    name: dev
+    url: https://dev.random-gif.k8s.psu.edu
+    on_stop: stop_dev

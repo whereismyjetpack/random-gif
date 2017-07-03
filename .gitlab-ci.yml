@@ -34,7 +34,7 @@ deploy_dev:
   stage: deploy
   script:
     # - env
-    - helm upgrade --install random-gif-dev deploy/random-gif -f values-master.yml --wait
+    - helm upgrade --install random-gif-dev deploy/random-gif -f values-dev.yml --wait
   only:
     - develop
   environment:

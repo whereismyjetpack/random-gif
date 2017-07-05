@@ -41,5 +41,5 @@ deploy_nonprod:
     - helm upgrade --install random-gif-$CI_COMMIT_REF_SLUG deploy/random-gif --wait --set image.tag=$CI_COMMIT_SHA --set ingress.hosts={$CI_COMMIT_REF_SLUG.random-gif.k8s.psu.edu}
   environment:
     name: $CI_COMMIT_REF_SLUG
-    url: https://CI_COMMIT_REF_SLUG.random-gif.k8s.psu.edu
+    url: https://$CI_COMMIT_REF_SLUG.random-gif.k8s.psu.edu
     on_stop: stop_nonprod

@@ -23,22 +23,23 @@ build:
   tags:
     - docker
 
-stop_dev:
+stop_nonprod:
   stage: deploy
   variables:
     GIT_STRATEGY: none
   when: manual
   script:
-    - helm delete random-gif-dev
+    - helm delete random-gif-$CI_COMMIT_REF_SLUG
   environment:
-    name: dev
+    name: $CI_COMMIT_REF_SLUG
     action: stop
 
-deploy_dev:
+
+deploy_nonprod:
   stage: deploy
   script:
-    - helm upgrade --install random-gif-dev deploy/random-gif -f values-dev.yml --wait --set image.tag=$CI_COMMIT_SHA
+    - helm upgrade --install random-gif-$CI_COMMIT_REF_SLUG deploy/random-gif --wait --set image.tag=$CI_COMMIT_SHA --set ingress.hosts={$CI_COMMIT_REF_SLUG.random-gif.k8s.psu.edu}
   environment:
-    name: dev
-    url: https://dev.random-gif.k8s.psu.edu
-    on_stop: stop_dev
+    name: $CI_COMMIT_REF_SLUG
+    url: https://CI_COMMIT_REF_SLUG.random-gif.k8s.psu.edu
+    on_stop: stop_nonprod

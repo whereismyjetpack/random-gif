@@ -13,5 +13,4 @@ stages:
 build:
   stage: build
   script:
-    - docker build -t nexus.ci.psu.edu:5000/djb44/random:$CI_COMMIT_SHA .
-    - docker push nexus.ci.psu.edu:5000/djb44/random
+    - ls

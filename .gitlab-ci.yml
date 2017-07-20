@@ -13,4 +13,5 @@ stages:
 build:
   stage: build
   script:
-    - ls
+    - apt-get install docker 
+    - apt-get install helm

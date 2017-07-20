@@ -1,3 +1,5 @@
+image: ubuntu:latest
+
 cache:
   key: "$CI_JOB_NAME/$CI_COMMIT_REF_NAME"
   untracked: true
@@ -7,39 +9,9 @@ stages:
   - deploy
   - backup
 
-before_script:
-  - git-crypt unlock
-
-after_script:
-  - git-crypt lock
 
 build:
   stage: build
   script:
-    - export HTTP_PROXY=http://proxy.aset.psu.edu:8080
-    - export HTTPS_PROXY=http://proxy.aset.psu.edu:8080
     - docker build -t nexus.ci.psu.edu:5000/djb44/random:$CI_COMMIT_SHA .
     - docker push nexus.ci.psu.edu:5000/djb44/random
-  tags:
-    - docker
-
-stop_nonprod:
-  stage: deploy
-  variables:
-    GIT_STRATEGY: none
-  when: manual
-  script:
-    - helm delete random-gif-$CI_COMMIT_REF_SLUG
-  environment:
-    name: $CI_COMMIT_REF_SLUG
-    action: stop
-
-
-deploy_nonprod:
-  stage: deploy
-  script:
-    - helm upgrade --install random-gif-$CI_COMMIT_REF_SLUG deploy/random-gif --wait --set image.tag=$CI_COMMIT_SHA --set ingress.hosts={$CI_COMMIT_REF_SLUG.random-gif.k8s.psu.edu}
-  environment:
-    name: $CI_COMMIT_REF_SLUG
-    url: https://$CI_COMMIT_REF_SLUG.random-gif.k8s.psu.edu
-    on_stop: stop_nonprod

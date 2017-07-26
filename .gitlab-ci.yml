@@ -1,8 +1,11 @@
-image: ubuntu:latest
+image: docker:latest
 
 cache:
   key: "$CI_JOB_NAME/$CI_COMMIT_REF_NAME"
   untracked: true
+
+variables:
+  KUBERNETES_NAMESPACE_OVERWRITE: default
 
 stages:
   - build
@@ -13,5 +16,4 @@ stages:
 build:
   stage: build
   script:
-    - apt-get install docker 
-    - apt-get install helm
+    - ls

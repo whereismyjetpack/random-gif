@@ -20,5 +20,5 @@ build:
   stage: build
   script:
     - docker login -u deployment -p $NEXUS_TOKEN nexus.ci.psu.edu:5000
-    - docker build -t test/random .
+    - docker build -t nexus.ci.psu.edu:5000/test/random .
     - docker push nexus.ci.psu.edu:5000/test/random:latest

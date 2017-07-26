@@ -30,3 +30,4 @@ deploy:
 
   script:
     - kubectl get pods
+    - ls

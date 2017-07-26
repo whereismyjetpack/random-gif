@@ -29,6 +29,6 @@ deploy:
   image: whereismyjetpack/build:latest
 
   script:
-    - kubectl get pods
-    - ls
     - helm upgrade --install test deploy/random-gif --wait --set image.tag=$CI_COMMIT_SHA --set ingress.hosts={dev.random-gif.k8s.psu.edu}
+  only:
+    - develop

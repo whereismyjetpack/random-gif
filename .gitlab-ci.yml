@@ -1,11 +1,14 @@
-image: docker:dind
+image: docker:latest
 
 cache:
   key: "$CI_JOB_NAME/$CI_COMMIT_REF_NAME"
   untracked: true
 
 variables:
-  KUBERNETES_NAMESPACE_OVERWRITE: default
+  DOCKER_HOST: tcp://localhost:2375
+
+services:
+- docker:dind
 
 stages:
   - build

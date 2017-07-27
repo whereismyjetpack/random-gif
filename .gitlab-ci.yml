@@ -19,23 +19,15 @@ stages:
 build:
   stage: build
   script:
-    - touch test
-    #- docker login -u deployment -p $NEXUS_TOKEN nexus.ci.psu.edu:5000
-    #- docker build -t nexus.ci.psu.edu:5000/djb44/random:$CI_COMMIT_SHA .
-    #- docker push nexus.ci.psu.edu:5000/djb44/random
-  artifacts:
-    untracked: true
-    expire_in: '3min'
-
+    - docker login -u deployment -p $NEXUS_TOKEN nexus.ci.psu.edu:5000
+    - docker build -t nexus.ci.psu.edu:5000/djb44/random:$CI_COMMIT_SHA .
+    - docker push nexus.ci.psu.edu:5000/djb44/random
 
 deploy:
   stage: deploy
   image: whereismyjetpack/build:latest
 
   script:
-    - ls
-    #- helm upgrade --install test deploy/random-gif --wait --set image.tag=$CI_COMMIT_SHA --set ingress.hosts={dev.random-gif.k8s.psu.edu}
+    - helm upgrade --install test deploy/random-gif --wait --set image.tag=$CI_COMMIT_SHA --set ingress.hosts={dev.random-gif.k8s.psu.edu}
   only:
     - develop
-  dependencies:
-  - build

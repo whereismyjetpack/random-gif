@@ -39,12 +39,13 @@ deploy_version:
   script:
     - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
     - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
-    - kubectl get deployments
+    - kubectl rollout status deployment/$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG
   only:
     - tags
   environment:
     name: $CI_COMMIT_REF_SLUG
     url: https://$CI_COMMIT_REF_SLUG.$CI_PROJECT_NAME.$DOMAIN
+    on_stop: stop_environment
 
 
 deploy:

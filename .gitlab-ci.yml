@@ -68,3 +68,5 @@ promote_to_prod:
   environment:
     name: $CI_COMMIT_REF_SLUG
     url: https://$CI_PROJECT_NAME.$DOMAIN
+  only:
+    - tags

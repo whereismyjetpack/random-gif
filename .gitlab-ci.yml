@@ -20,6 +20,26 @@ build:
     - docker login -u deployment -p $NEXUS_TOKEN $DOCKER_REGISTRY
     - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_SHA .
     - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
+  only:
+    - branches
+
+build:
+  stage: build
+  script:
+    - docker login -u deployment -p $NEXUS_TOKEN $DOCKER_REGISTRY
+    - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG .
+    - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
+  only:
+    - tags
+
+deploy_version:
+  stage: deploy
+  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
+  script:
+    - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
+    - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
+  only:
+    - tags
 
 deploy:
   stage: deploy
@@ -28,14 +48,15 @@ deploy:
     - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
     - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
   environment:
-    name: $CI_COMMIT_REF_NAME
+    name: $CI_COMMIT_REF_SLUG
     url: https://$CI_COMMIT_REF_SLUG.$CI_PROJECT_NAME.$DOMAIN
   except:
     - master
+    - tags
 
 promote_to_prod:
   variables:
-    CI_COMMIT_REF_NAME: prod
+    CI_COMMIT_REF_SLUG: prod
   stage: deploy
   image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
   script:
@@ -43,8 +64,5 @@ promote_to_prod:
     - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
   when: manual
   environment:
-    name: $CI_COMMIT_REF_NAME
+    name: $CI_COMMIT_REF_SLUG
     url: https://$CI_PROJECT_NAME.$DOMAIN
-
-
-

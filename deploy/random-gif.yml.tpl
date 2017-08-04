@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{CI_PROJECT_NAME}}-{{ CI_COMMIT_REF_NAME }}
+  name: {{CI_PROJECT_NAME}}-{{ CI_COMMIT_REF_SLUG }}
   labels:
     app: {{CI_PROJECT_NAME}}
-    ref: "{{CI_COMMIT_REF_NAME }}"
+    ref: "{{CI_COMMIT_REF_SLUG }}"
 spec:
   type: ClusterIP
   ports:
@@ -14,15 +14,15 @@ spec:
     protocol: TCP
   selector:
     app: {{CI_PROJECT_NAME}}
-    ref: "{{CI_COMMIT_REF_NAME}}"
+    ref: "{{CI_COMMIT_REF_SLUG}}"
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{CI_PROJECT_NAME}}-{{CI_COMMIT_REF_NAME}}
+  name: {{CI_PROJECT_NAME}}-{{CI_COMMIT_REF_SLUG}}
   labels:
     app: {{CI_PROJECT_NAME}}
-    ref: "{{CI_COMMIT_REF_NAME}}"
+    ref: "{{CI_COMMIT_REF_SLUG}}"
     user: "{{GITLAB_USER_ID}}"
     job_number: "{{CI_JOB_ID}}"
 spec:
@@ -31,7 +31,7 @@ spec:
     metadata:
       labels:
         app: {{CI_PROJECT_NAME}}
-        ref: "{{CI_COMMIT_REF_NAME}}"
+        ref: "{{CI_COMMIT_REF_SLUG}}"
     spec:
 {%- if IMAGE_PULL_SECRETS is defined %}
       imagePullSecrets:
@@ -61,10 +61,10 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{CI_PROJECT_NAME}}-{{CI_COMMIT_REF_NAME}}
+  name: {{CI_PROJECT_NAME}}-{{CI_COMMIT_REF_SLUG}}
   labels:
     app: {{CI_PROJECT_NAME}}
-    ref: "{{CI_COMMIT_REF_NAME}}"
+    ref: "{{CI_COMMIT_REF_SLUG}}"
   annotations:
       kubernetes.io/ingress.class: "traefik"
 spec:
@@ -74,6 +74,5 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: {{CI_PROJECT_NAME}}-{{CI_COMMIT_REF_NAME}}
+              serviceName: {{CI_PROJECT_NAME}}-{{CI_COMMIT_REF_SLUG}}
               servicePort: 8080
-

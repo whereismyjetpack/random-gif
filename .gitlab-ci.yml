@@ -75,3 +75,18 @@ promote_to_prod:
     url: https://$CI_PROJECT_NAME.$DOMAIN
   only:
     - tags
+
+stop_environment:
+  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  when: manual
+  script:
+    - kubectl delete service $CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG
+    - kubectl delete deployment $CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG
+    - kubectl delete ingress $CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG
+  environment:
+    name: $CI_COMMIT_REF_SLUG
+    action: stop
+  dependencies: []

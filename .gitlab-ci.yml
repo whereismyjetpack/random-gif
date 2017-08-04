@@ -1,32 +1,47 @@
 image: docker:latest
 
-cache:
-  key: "$CI_JOB_NAME/$CI_COMMIT_REF_NAME"
-  untracked: true
-
 variables:
   DOCKER_HOST: tcp://localhost:2375
+  IMAGE_PULL_SECRETS: nexus
+  DOCKER_REGISTRY: nexus.ci.psu.edu:5000
+  REGISTRY_NAMESPACE: djb44
+  DOMAIN: dev.k8s.psu.edu
 
 services:
 - docker:dind
 
 stages:
+  - build
   - deploy
 
-
-#build:
-#  stage: build
-#  script:
-#    - docker login -u deployment -p $NEXUS_TOKEN nexus.ci.psu.edu:5000
-#    - docker build -t nexus.ci.psu.edu:5000/djb44/random:$CI_COMMIT_SHA .
-#    - docker push nexus.ci.psu.edu:5000/djb44/random
+build:
+  stage: build
+  script:
+    - docker login -u deployment -p $NEXUS_TOKEN $DOCKER_REGISTRY
+    - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
 
 deploy:
   stage: deploy
-  image: whereismyjetpack/build:latest
-
+  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
   script:
-    - kubectl --namespace gitlab run foo --image=nginx
-    #- helm upgrade --install test deploy/random-gif --wait --set image.tag=$CI_COMMIT_SHA --set ingress.hosts={dev.random-gif.k8s.psu.edu}
-  only:
-    - develop
+    - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
+    - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
+  environment:
+    name: $CI_COMMIT_REF_NAME
+    url: https://$CI_COMMIT_REF_SLUG.$CI_PROJECT_NAME.$DOMAIN
+  except:
+    - master
+
+promote:
+  stage: deploy
+  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
+  script:
+    - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
+    - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
+  when: manual
+  environment:
+    name: prod
+    url: https://$CI_PROJECT_NAME.$DOMAIN
+
+
+

@@ -18,7 +18,7 @@ build:
   stage: build
   script:
     - docker login -u deployment -p $NEXUS_TOKEN $DOCKER_REGISTRY
-    - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME .
+    - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_SHA .
     - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
 
 deploy:

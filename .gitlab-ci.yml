@@ -79,6 +79,8 @@ promote_to_prod:
     on_stop: stop_environment
   only:
     - tags
+  after_script:
+    - stop_environment
 
 stop_environment:
   image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest

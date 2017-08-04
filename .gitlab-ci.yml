@@ -41,6 +41,10 @@ deploy_version:
     - kubectl get deployments
   only:
     - tags
+  environment:
+    name: $CI_COMMIT_REF_SLUG 
+    url: https://$CI_COMMIT_REF_SLUG.$CI_PROJECT_NAME.$DOMAIN
+
 
 deploy:
   stage: deploy

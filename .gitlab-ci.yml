@@ -53,10 +53,11 @@ deploy:
   script:
     - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
     - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
-    - kubectl get deployments
+    - kubectl rollout status -f deploy/$CI_PROJECT_NAME.yml
   environment:
     name: $CI_COMMIT_REF_SLUG
     url: https://$CI_COMMIT_REF_SLUG.$CI_PROJECT_NAME.$DOMAIN
+    on_stop: stop_environment
   except:
     - master
     - tags
@@ -69,10 +70,12 @@ promote_to_prod:
   script:
     - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
     - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
+    - kubectl rollout status -f deploy/$CI_PROJECT_NAME.yml
   when: manual
   environment:
     name: $CI_COMMIT_REF_SLUG
     url: https://$CI_PROJECT_NAME.$DOMAIN
+    on_stop: stop_environment
   only:
     - tags
 

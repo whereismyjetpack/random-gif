@@ -38,6 +38,7 @@ deploy_version:
   script:
     - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
     - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
+    - kubectl get deployments
   only:
     - tags
 

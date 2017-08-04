@@ -33,7 +33,9 @@ deploy:
   except:
     - master
 
-promote:
+promote_to_prod:
+  variables:
+    CI_COMMIT_REF_NAME: prod
   stage: deploy
   image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
   script:

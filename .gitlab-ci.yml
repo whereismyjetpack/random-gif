@@ -27,7 +27,7 @@ build_tags:
   stage: build
   script:
     - docker login -u deployment -p $NEXUS_TOKEN $DOCKER_REGISTRY
-    - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG .
+    - docker tag $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_SHA $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG
     - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
   only:
     - tags
@@ -42,7 +42,7 @@ deploy_version:
   only:
     - tags
   environment:
-    name: $CI_COMMIT_REF_SLUG 
+    name: $CI_COMMIT_REF_SLUG
     url: https://$CI_COMMIT_REF_SLUG.$CI_PROJECT_NAME.$DOMAIN
 
 

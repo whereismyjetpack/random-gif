@@ -6,6 +6,7 @@ variables:
   DOCKER_REGISTRY: nexus.ci.psu.edu:5000
   REGISTRY_NAMESPACE: djb44
   DOMAIN: dev.k8s.psu.edu
+  ENVIRONMENT_NAME: $CI_COMMIT_REF_SLUG
 
 services:
 - docker:dind
@@ -33,21 +34,6 @@ build_tags:
   only:
     - tags
 
-deploy_version:
-  stage: deploy
-  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
-  script:
-    - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
-    - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
-    - kubectl rollout status deployment/$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG
-  only:
-    - tags
-  environment:
-    name: $CI_COMMIT_REF_SLUG
-    url: https://$CI_COMMIT_REF_SLUG.$CI_PROJECT_NAME.$DOMAIN
-    on_stop: stop_environment
-
-
 deploy:
   stage: deploy
   image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
@@ -61,26 +47,23 @@ deploy:
     on_stop: stop_environment
   except:
     - master
-    - tags
 
 promote_to_prod:
   variables:
-    CI_COMMIT_REF_SLUG: prod
+    ENVIRONMENT_NAME: prod
   stage: deploy
   image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
   script:
     - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
     - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
-    - kubectl rollout status deployment/$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG
+    - kubectl rollout status deployment/$CI_PROJECT_NAME-$ENVIRONMENT_NAME
   when: manual
   environment:
     name: $CI_COMMIT_REF_SLUG
     url: https://$CI_PROJECT_NAME.$DOMAIN
-    on_stop: stop_environment
+    action: stop
   only:
     - tags
-  after_script:
-    - stop_environment
 
 stop_environment:
   image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest

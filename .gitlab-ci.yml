@@ -7,6 +7,7 @@ variables:
   REGISTRY_NAMESPACE: djb44
   DOMAIN: dev.k8s.psu.edu
   ENVIRONMENT_NAME: $CI_COMMIT_REF_SLUG
+  CI_REPOSITORY_URL: https://djb44:$GIT_ACCESS_TOKEN@git.psu.edu/$CI_PROJECT_PATH.git
 
 services:
 - docker:dind
@@ -47,6 +48,18 @@ deploy:
     on_stop: stop_environment
   except:
     - master
+
+start_release:
+  stage: deploy
+  image: indiehosters/git
+  before_script:
+    - git config --global user.email "$GITLAB_USER_EMAIL"
+  script:
+    - echo "10" > version.txt
+    - git tag v10.0
+    - git add .
+    - git push --follow-tags $CI_REPOSITORY_URL HEAD:$CI_COMMIT_REF_NAME -q
+  when: manual
 
 promote_to_prod:
   variables:

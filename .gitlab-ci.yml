@@ -48,18 +48,6 @@ deploy:
   except:
     - master
 
-staging:
-  stage: staging
-  variables:
-    ENVIRONMENT_NAME: prod
-  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
-  script:
-    - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
-    - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
-    - kubectl rollout status deployment/$CI_PROJECT_NAME-$ENVIRONMENT_NAME
-  only:
-    - master
-
 promote_to_prod:
   variables:
     ENVIRONMENT_NAME: prod

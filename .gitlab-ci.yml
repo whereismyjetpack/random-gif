@@ -80,6 +80,7 @@ production:
   when: manual
   only:
     - master
+
 stop_staging:
   image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
   stage: staging
@@ -89,6 +90,9 @@ stop_staging:
     - kubectl delete service $CI_PROJECT_NAME-$ENVIRONMENT_NAME
     - kubectl delete deployment $CI_PROJECT_NAME-$ENVIRONMENT_NAME
     - kubectl delete ingress $CI_PROJECT_NAME-$ENVIRONMENT_NAME
+  environment:
+    name: staging
+    action: stop
 
 stop_environment:
   image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest

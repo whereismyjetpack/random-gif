@@ -16,7 +16,7 @@ stages:
 
 thing:
   stage: thing
-  image: indiehosters:git
+  image: indiehosters/git
   script:
     - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
     - git checkout master

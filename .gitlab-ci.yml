@@ -16,6 +16,7 @@ stages:
 
 thing:
   stage: thing
+  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
   script:
     - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
     - git checkout master

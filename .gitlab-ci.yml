@@ -58,6 +58,7 @@ start_release:
     - echo "10" > version.txt
     - git tag v10.0
     - git add .
+    - git commit -m '[skip-ci] starting release'
     - git push --follow-tags $CI_REPOSITORY_URL HEAD:$CI_COMMIT_REF_NAME -q
   when: manual
 

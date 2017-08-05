@@ -61,7 +61,7 @@ staging:
   environment:
     name: staging
     url: https://staging.$CI_PROJECT_NAME.$DOMAIN
-    on_stop: stop_environment
+    on_stop: stop_staging
   only:
     - master
 
@@ -80,8 +80,15 @@ production:
   when: manual
   only:
     - master
-
-
+stop_staging:
+  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
+  stage: staging
+  variables:
+    ENVIRONMENT_NAME: staging
+  script:
+    - kubectl delete service $CI_PROJECT_NAME-$ENVIRONMENT_NAME
+    - kubectl delete deployment $CI_PROJECT_NAME-$ENVIRONMENT_NAME
+    - kubectl delete ingress $CI_PROJECT_NAME-$ENVIRONMENT_NAME
 
 stop_environment:
   image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest

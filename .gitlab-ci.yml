@@ -14,6 +14,7 @@ services:
 stages:
   - build
   - deploy
+  - staging
 
 build:
   stage: build
@@ -48,22 +49,39 @@ deploy:
   except:
     - master
 
-promote_to_prod:
+staging:
+  stage: staging
   variables:
-    ENVIRONMENT_NAME: prod
-  stage: deploy
+    ENVIRONMENT_NAME: staging
   image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
   script:
     - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
     - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
     - kubectl rollout status deployment/$CI_PROJECT_NAME-$ENVIRONMENT_NAME
-  when: manual
   environment:
-    name: $CI_COMMIT_REF_SLUG
-    url: https://$CI_PROJECT_NAME.$DOMAIN
-    action: stop
+    name: staging
+    url: https://staging.$CI_PROJECT_NAME.$DOMAIN
+    on_stop: stop_environment
   only:
-    - tags
+    - master
+
+production:
+  stage: production
+  variables:
+    ENVIRONMENT_NAME: prod
+  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
+  script:
+    - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
+    - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
+    - kubectl rollout status deployment/$CI_PROJECT_NAME-$ENVIRONMENT_NAME
+  environment:
+    name: prod
+    url: $CI_PROJECT_NAME.$DOMAIN
+  when: manual
+  only:
+    - master
+
+
 
 stop_environment:
   image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest

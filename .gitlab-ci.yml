@@ -12,100 +12,13 @@ services:
 - docker:dind
 
 stages:
-  - build
-  - deploy
-  - staging
-  - production
+  - thing
 
-build:
-  stage: build
+thing:
+  stage: thing
   script:
-    - docker login -u deployment -p $NEXUS_TOKEN $DOCKER_REGISTRY
-    - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_SHA .
-    - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
-
-build_tags:
-  stage: build
-  script:
-    - docker login -u deployment -p $NEXUS_TOKEN $DOCKER_REGISTRY
-    - docker pull $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_SHA
-    - docker tag $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_SHA $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG
-    - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
-  only:
-    - tags
-
-deploy:
-  stage: deploy
-  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
-  script:
-    - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
-    - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
-    - kubectl rollout status deployment/$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG
-  environment:
-    name: $CI_COMMIT_REF_SLUG
-    url: https://$CI_COMMIT_REF_SLUG.$CI_PROJECT_NAME.$DOMAIN
-    on_stop: stop_environment
-  except:
-    - master
-
-staging:
-  stage: staging
-  variables:
-    ENVIRONMENT_NAME: staging
-  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
-  script:
-    - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
-    - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
-    - kubectl rollout status deployment/$CI_PROJECT_NAME-$ENVIRONMENT_NAME
-  environment:
-    name: staging
-    url: https://staging.$CI_PROJECT_NAME.$DOMAIN
-    on_stop: stop_staging
-  only:
-    - master
-
-production:
-  stage: production
-  variables:
-    ENVIRONMENT_NAME: prod
-  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
-  script:
-    - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
-    - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
-    - kubectl rollout status deployment/$CI_PROJECT_NAME-$ENVIRONMENT_NAME
-  environment:
-    name: prod
-    url: $CI_PROJECT_NAME.$DOMAIN
-  when: manual
-  only:
-    - master
-
-stop_staging:
-  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
-  stage: staging
-  variables:
-    ENVIRONMENT_NAME: staging
-  script:
-    - kubectl delete service $CI_PROJECT_NAME-$ENVIRONMENT_NAME
-    - kubectl delete deployment $CI_PROJECT_NAME-$ENVIRONMENT_NAME
-    - kubectl delete ingress $CI_PROJECT_NAME-$ENVIRONMENT_NAME
-  environment:
-    name: staging
-    action: stop
-  only:
-    - master
-
-stop_environment:
-  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
-  stage: deploy
-  variables:
-    GIT_STRATEGY: none
-  when: manual
-  script:
-    - kubectl delete service $CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG
-    - kubectl delete deployment $CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG
-    - kubectl delete ingress $CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG
-  environment:
-    name: $CI_COMMIT_REF_SLUG
-    action: stop
-  dependencies: []
+    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+    - git checkout master
+    - git checkout develop
+    - git checkout -b release/v9
+    - git push origin --all

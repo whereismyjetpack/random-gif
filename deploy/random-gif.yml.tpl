@@ -3,7 +3,9 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    traefik.backend.loadbalancer.sticky: true
+{%- if TRAEFIK_STICKY_SESSIONS|bool %}
+    traefik.backend.loadbalancer.sticky: "true"
+{%- endif %}
   name: {{CI_PROJECT_NAME}}-{{ ENVIRONMENT_NAME }}
   labels:
     app: {{CI_PROJECT_NAME}}

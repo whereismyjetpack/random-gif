@@ -1,13 +1,13 @@
 from random_gif import app
 from flask import session, render_template, request
 import giphypop
-import os
+import socket
 
 
 @app.route('/', methods=('GET', 'POST'))
 def random_gif():
     gif = giphypop.Giphy()
-    hostname = os.hostname()
+    hostname = socket.gethostname()
     if request.form:
         search = request.form.get('search', None)
     else:

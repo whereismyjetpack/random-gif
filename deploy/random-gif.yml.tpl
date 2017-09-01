@@ -43,7 +43,11 @@ spec:
 {%- endif %}
       containers:
       - name: {{CI_PROJECT_NAME}}
-        image: "nexus.ci.psu.edu:5000/djb44/{{CI_PROJECT_NAME}}:{{CI_COMMIT_SHA|default('develop')}}"
+        imagePullPolicy: Always
+        image: "nexus.ci.psu.edu:5000/djb44/{{CI_PROJECT_NAME}}:{{ENVIRONMENT_NAME|default('develop')}}"
+        env:
+        - name: CI_COMMIT_SHA
+          value: "{{ CI_COMMIT_SHA }}"
         ports:
         - containerPort: 8080
         livenessProbe:

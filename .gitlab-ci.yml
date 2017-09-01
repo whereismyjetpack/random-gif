@@ -22,7 +22,7 @@ build:
   script:
     - ls /root/.m2
     - docker login -u deployment -p $NEXUS_TOKEN $DOCKER_REGISTRY
-    - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_SHA .
+    - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG .
     - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
 
 build_tags:

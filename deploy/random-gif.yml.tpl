@@ -67,6 +67,7 @@ metadata:
     ref: "{{ENVIRONMENT_NAME}}"
   annotations:
       kubernetes.io/ingress.class: "traefik"
+      traefik.backend.loadbalancer.sticky=true
 spec:
   rules:
     - host: {{CI_ENVIRONMENT_URL|replace("https://", "")|replace("http://","") }}

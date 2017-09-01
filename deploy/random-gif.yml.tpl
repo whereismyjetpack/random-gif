@@ -2,6 +2,8 @@
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    traefik.backend.loadbalancer.sticky=true
   name: {{CI_PROJECT_NAME}}-{{ ENVIRONMENT_NAME }}
   labels:
     app: {{CI_PROJECT_NAME}}
@@ -67,7 +69,6 @@ metadata:
     ref: "{{ENVIRONMENT_NAME}}"
   annotations:
       kubernetes.io/ingress.class: "traefik"
-      traefik.backend.loadbalancer.sticky=true
 spec:
   rules:
     - host: {{CI_ENVIRONMENT_URL|replace("https://", "")|replace("http://","") }}

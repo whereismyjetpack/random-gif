@@ -1,5 +1,8 @@
 image: docker:latest
 
+cache:
+  untracked: true
+
 variables:
   DOCKER_HOST: tcp://localhost:2375
   IMAGE_PULL_SECRETS: nexus

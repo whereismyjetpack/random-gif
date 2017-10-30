@@ -4,6 +4,7 @@ cache:
   untracked: true
 
 variables:
+  KUBE_UTILS_URL: quay.io/dannbohn/kube-utils:latest
   DOCKER_HOST: tcp://localhost:2375
   IMAGE_PULL_SECRETS: nexus
   DOCKER_REGISTRY: nexus.ci.psu.edu:5000
@@ -40,7 +41,7 @@ build_tags:
 
 deploy:
   stage: deploy
-  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
+  image: $KUBE_UTILS_URL
   script:
     - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
     - kubectl apply -f deploy/$CI_PROJECT_NAME.yml

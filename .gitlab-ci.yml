@@ -42,10 +42,7 @@ deploy:
   stage: deploy
   image: $KUBE_UTILS_URL
   script:
-    - curl -X POST \
-     -F token=$DEPLOY_TOKEN \
-     -F ref=master \
-     https://git.psu.edu/api/v4/projects/4478/trigger/pipeline
+    - curl -X POST -F token=$DEPLOY_TOKEN -F ref=master https://git.psu.edu/api/v4/projects/4478/trigger/pipeline
   environment:
     name: $CI_COMMIT_REF_SLUG
     url: https://$CI_COMMIT_REF_SLUG.$CI_PROJECT_NAME.$DOMAIN

@@ -6,6 +6,7 @@ cache:
 variables:
   KUBE_UTILS_URL: quay.io/dannbohn/kube-utils:latest
   DOCKER_HOST: tcp://localhost:2375
+  DOCKER_IMAGE_URL: nexus.ci.psu.edu:5000/djb44/random-gif
   IMAGE_PULL_SECRETS: nexus
   DOCKER_REGISTRY: nexus.ci.psu.edu:5000
   REGISTRY_NAMESPACE: djb44
@@ -42,7 +43,7 @@ deploy:
   stage: deploy
   image: $KUBE_UTILS_URL
   script:
-    - curl -X POST -F token=$DEPLOY_TOKEN -F ref=master https://git.psu.edu/api/v4/projects/4478/trigger/pipeline
+    - curl -X POST -F token=$DEPLOY_TOKEN -F ref=master -F variables[DEPLOYMENT_ENVIRONMENT]=$CI_COMMIT_REF_SLUG -F variables[DOCKER_IMAGE_TAG]=$CI_COMMIT_REF_SLUG https://git.psu.edu/api/v4/projects/4478/trigger/pipeline
   environment:
     name: $CI_COMMIT_REF_SLUG
     url: https://$CI_COMMIT_REF_SLUG.$CI_PROJECT_NAME.$DOMAIN

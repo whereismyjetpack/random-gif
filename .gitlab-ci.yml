@@ -8,12 +8,8 @@ variables:
   DOCKER_HOST: tcp://localhost:2375
   DOCKER_IMAGE_URL: nexus.ci.psu.edu:5000/djb44/random-gif
   IMAGE_PULL_SECRETS: nexus
-  DOCKER_REGISTRY: nexus.ci.psu.edu:5000
-  REGISTRY_NAMESPACE: djb44
   TRAEFIK_STICKY_SESSIONS: "true"
   DOMAIN: qa.k8s.psu.edu
-  ENVIRONMENT_NAME: $CI_COMMIT_REF_SLUG
-  CI_REPOSITORY_URL: https://djb44:$GIT_ACCESS_TOKEN@git.psu.edu/$CI_PROJECT_PATH.git
 
 services:
 - docker:dind
@@ -29,69 +25,8 @@ build:
     - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG .
     - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
 
-build_tags:
-  stage: build
-  script:
-    - docker login -u deployment -p $NEXUS_TOKEN $DOCKER_REGISTRY
-    - docker pull $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_SHA
-    - docker tag $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_SHA $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG
-    - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
-  only:
-    - tags
-
 deploy:
   stage: deploy
   image: $KUBE_UTILS_URL
   script:
     - curl -X POST -F token=$DEPLOY_TOKEN -F ref=master -F variables[DEPLOYMENT_ENVIRONMENT]=$CI_COMMIT_REF_SLUG -F variables[DOCKER_IMAGE_TAG]=$CI_COMMIT_REF_SLUG https://git.psu.edu/api/v4/projects/4478/trigger/pipeline
-  environment:
-    name: $CI_COMMIT_REF_SLUG
-    url: https://$CI_COMMIT_REF_SLUG.$CI_PROJECT_NAME.$DOMAIN
-    on_stop: stop_environment
-  except:
-    - master
-
-start_release:
-  stage: deploy
-  image: indiehosters/git
-  before_script:
-    - git config --global user.email "$GITLAB_USER_EMAIL"
-  script:
-    - echo "10" > version.txt
-    - git tag v10.0
-    - git add .
-    - git commit -m '[skip-ci] starting release'
-    - git push --follow-tags $CI_REPOSITORY_URL HEAD:$CI_COMMIT_REF_NAME -q
-  when: manual
-
-promote_to_prod:
-  variables:
-    ENVIRONMENT_NAME: prod
-  stage: deploy
-  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
-  script:
-    - envtpl deploy/$CI_PROJECT_NAME.yml.tpl
-    - kubectl apply -f deploy/$CI_PROJECT_NAME.yml
-    - kubectl rollout status deployment/$CI_PROJECT_NAME-$ENVIRONMENT_NAME
-  when: manual
-  environment:
-    name: $CI_COMMIT_REF_SLUG
-    url: https://$CI_PROJECT_NAME.$DOMAIN
-    action: stop
-  only:
-    - tags
-
-stop_environment:
-  image: nexus.ci.psu.edu:5000/syseng/kube-utils:latest
-  stage: deploy
-  variables:
-    GIT_STRATEGY: none
-  when: manual
-  script:
-    - kubectl delete service $CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG
-    - kubectl delete deployment $CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG
-    - kubectl delete ingress $CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG
-  environment:
-    name: $CI_COMMIT_REF_SLUG
-    action: stop
-  dependencies: []

@@ -10,7 +10,7 @@ variables:
   DOCKER_USER: "dannbohn+robot"
   REGISTRY_NAMESPACE: dannbohn
   TRAEFIK_STICKY_SESSIONS: "true"
-  DOMAIN: 
+  DOMAIN: qa.k8s.psu.edu
 
 services:
 - docker:dind

@@ -6,11 +6,11 @@ cache:
 variables:
   KUBE_UTILS_URL: quay.io/dannbohn/kube-utils:latest
   DOCKER_HOST: tcp://localhost:2375
-  DOCKER_REGISTRY: nexus.ci.psu.edu:5000
-  REGISTRY_NAMESPACE: djb44
-  IMAGE_PULL_SECRETS: nexus
+  DOCKER_REGISTRY: quay.io/
+  DOCKER_USER: dannbohn+robot
+  REGISTRY_NAMESPACE: dannbohn
   TRAEFIK_STICKY_SESSIONS: "true"
-  DOMAIN: qa.k8s.psu.edu
+  DOMAIN: 
 
 services:
 - docker:dind
@@ -22,12 +22,12 @@ stages:
 build:
   stage: build
   script:
-    - docker login -u deployment -p $NEXUS_TOKEN $DOCKER_REGISTRY
+    - docker login -u $DOCKER_USER -p $NEXUS_TOKEN $DOCKER_REGISTRY
     - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG .
     - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
 
-deploy:
-  stage: deploy
-  image: $KUBE_UTILS_URL
-  script:
-    - curl -X POST -F token=$DEPLOY_TOKEN -F ref=master -F variables[DEPLOYMENT_ENVIRONMENT]=$CI_COMMIT_REF_SLUG -F variables[DOCKER_IMAGE_TAG]=$CI_COMMIT_REF_SLUG https://git.psu.edu/api/v4/projects/4478/trigger/pipeline
+#deploy:
+#  stage: deploy
+#  image: $KUBE_UTILS_URL
+#  script:
+#    - curl -X POST -F token=$DEPLOY_TOKEN -F ref=master -F variables[DEPLOYMENT_ENVIRONMENT]=$CI_COMMIT_REF_SLUG -F variables[DOCKER_IMAGE_TAG]=$CI_COMMIT_REF_SLUG https://git.psu.edu/api/v4/projects/4478/trigger/pipeline

@@ -4,6 +4,7 @@ cache:
   untracked: true
 
 variables:
+  TILLER_NAMESPACE: eio-swe
   KUBE_UTILS_URL: quay.io/dannbohn/kube-utils:latest
   DOCKER_HOST: tcp://localhost:2375
   DOCKER_REGISTRY: "quay.io"

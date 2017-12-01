@@ -4,7 +4,6 @@ cache:
   untracked: true
 
 variables:
-  TILLER_NAMESPACE: eio-swe
   KUBE_UTILS_URL: quay.io/dannbohn/kube-utils:latest
   DOCKER_HOST: tcp://localhost:2375
   DOCKER_REGISTRY: "quay.io"
@@ -28,18 +27,16 @@ build:
     - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
 
 
-deploy:
+deploy_nonprod:
+  variables:
+    ENVIRONMENT_NAME: $CI_COMMIT_REF_SLUG
   stage: deploy
   image: $KUBE_UTILS_URL
+  except:
+  - master
   script:
-  - helm ls
-    # - envtpl deploy/random-gif.yml.tpl
-    # - kubectl apply -f deploy/random-gif.yml
+    - envtpl deploy/random-gif.yml.tpl
+    - kubectl apply -f deploy/random-gif.yml
   environment:
     name: dev
-    url: https://dev-$CI_PROJECT_NAME.$DOMAIN
-
-#  stage: deploy
-#  image: $KUBE_UTILS_URL
-#  script:
-#    - curl -X POST -F token=$DEPLOY_TOKEN -F ref=master -F variables[DEPLOYMENT_ENVIRONMENT]=$CI_COMMIT_REF_SLUG -F variables[DOCKER_IMAGE_TAG]=$CI_COMMIT_REF_SLUG https://git.psu.edu/api/v4/projects/4478/trigger/pipeline
+    url: https://$ENVIRONMENT_NAME-$CI_PROJECT_NAME.$DOMAIN

@@ -77,6 +77,15 @@ metadata:
       kubernetes.io/ingress.class: "traefik"
 spec:
   rules:
+{%- if VANITY_DOMAIN is defined %}
+    - host: {{VANITY_DOMAIN}}
+      http:
+        paths:
+          - path: /:
+            backend:
+              serviceName: {{CI_PROJECT_NAME}}-{{CI_COMMIT_REF_SLUG}}
+              service
+{%- endif %}
     - host: {{CI_ENVIRONMENT_URL|replace("https://", "")|replace("http://","") }}
       http:
         paths:

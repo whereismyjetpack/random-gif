@@ -33,9 +33,22 @@ deploy_nonprod:
   except:
   - master
   script:
-    - env
     - envtpl deploy/random-gif.yml.tpl
     - kubectl apply -f deploy/random-gif.yml
   environment:
     name: $CI_COMMIT_REF_SLUG
     url: https://$CI_COMMIT_REF_SLUG-$CI_PROJECT_NAME.$DOMAIN
+
+deploy_prod:
+  variables:
+    VANITY_DOMAIN: random-gif.psu.edu
+    DOMAIN: qa.k8s.psu.edu
+  when: manual
+  stage: deploy
+  image: $KUBE_UTILS_URL
+  script:
+    - envtpl deploy/random-gif.yml.tpl
+    - kubectl apply -f deploy/random-gif.yml
+  environment:
+    name: prod
+    url: https://$CI_PROJECT_NAME.$DOMAIN

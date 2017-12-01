@@ -31,8 +31,9 @@ deploy:
   stage: deploy
   image: $KUBE_UTILS_URL
   script:
-    - envtpl deploy/random-gif.yml.tpl
-    - kubectl apply -f deploy/random-gif.yml
+  - helm ls
+    # - envtpl deploy/random-gif.yml.tpl
+    # - kubectl apply -f deploy/random-gif.yml
   environment:
     name: dev
     url: https://dev-$CI_PROJECT_NAME.$DOMAIN

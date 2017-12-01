@@ -28,8 +28,6 @@ build:
 
 
 deploy_nonprod:
-  variables:
-    ENVIRONMENT_NAME: '$$CI_COMMIT_REF_SLUG'
   stage: deploy
   image: $KUBE_UTILS_URL
   except:

@@ -25,6 +25,7 @@ build:
     - docker login -u $DOCKER_USER -p $NEXUS_TOKEN $DOCKER_REGISTRY
     - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG .
     - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
+  dependencies: []
 
 
 deploy_nonprod:
@@ -33,11 +34,11 @@ deploy_nonprod:
   except:
   - master
   script:
-    - for f in deploy/*.tpl; do envtpl $f; done
-    - kubectl apply -f deploy
+    - deployer deploy
   environment:
     name: $CI_COMMIT_REF_SLUG
     url: https://$CI_COMMIT_REF_SLUG-$CI_PROJECT_NAME.$DOMAIN
+  dependencies: []
 
 deploy_prod:
   variables:

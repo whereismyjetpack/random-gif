@@ -50,8 +50,9 @@ deploy_prod:
   stage: deploy
   image: $KUBE_UTILS_URL
   script:
-    - envtpl deploy/random-gif.yml.tpl
-    - kubectl apply -f deploy/random-gif.yml
+  - deployer deploy
   environment:
     name: prod
     url: https://$CI_PROJECT_NAME.$DOMAIN
+  tags:
+  - prod

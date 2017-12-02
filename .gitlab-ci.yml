@@ -50,6 +50,7 @@ finish_feature:
   only:
   - /^feature\/.*$/
   script:
+  - git fetch
   - git checkout develop
   - git merge --no-ff $CI_COMMIT_REF_NAME
   - git branch -d $CI_COMMIT_REF_NAME

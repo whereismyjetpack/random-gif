@@ -40,6 +40,18 @@ deploy_nonprod:
     url: https://$CI_COMMIT_REF_SLUG-$CI_PROJECT_NAME.$DOMAIN
   dependencies: []
 
+deploy_staging:
+  stage: deploy
+  image: $KUBE_UTILS_URL
+  only:
+  - master
+  script:
+  - deployer deploy
+  environment:
+    name: staging
+    url: https://staging-$CI_PROJECT_NAME.$DOMAIN
+  dependencies: []
+
 deploy_prod:
   variables:
     VANITY_DOMAIN: random-gif.psu.edu

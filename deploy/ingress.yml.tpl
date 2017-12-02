@@ -14,7 +14,7 @@ spec:
     - host: {{VANITY_DOMAIN}}
       http:
         paths:
-          - path: /:
+          - path: /
             backend:
               serviceName: {{CI_PROJECT_NAME}}-{{CI_COMMIT_REF_SLUG}}
               servicePort: 8080

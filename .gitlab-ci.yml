@@ -17,6 +17,8 @@ services:
 
 stages:
   - build
+  - feature
+  - release
   - deploy
 
 build:
@@ -26,7 +28,6 @@ build:
     - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG .
     - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
   dependencies: []
-
 
 deploy_nonprod:
   stage: deploy
@@ -39,6 +40,41 @@ deploy_nonprod:
     name: $CI_COMMIT_REF_SLUG
     url: https://$CI_COMMIT_REF_SLUG-$CI_PROJECT_NAME.$DOMAIN
   dependencies: []
+
+finish_feature:
+  stage: feature
+  image: $KUBE_UTILS_URL
+  variables:
+    CI_REPOSITORY_URL: https://djb44:$GIT_ACCESS_TOKEN@git.psu.edu/$CI_PROJECT_PATH.git
+  when: manual
+  only:
+  - /^feature\/.*$/
+  script:
+  - git checkout develop
+  - git merge --no-ff $CI_COMMIT_REF_NAME
+  - git branch -d $CI_COMMIT_REF_NAME
+  - git add . 
+  - git commit -m 'finish feature $CI_COMMIT_REF_NAME'
+  - git push --follow-tags $CI_REPOSITORY_URL HEAD:$CI_COMMIT_REF_NAME -q
+
+start_release:
+  variables:
+    CI_REPOSITORY_URL: https://djb44:$GIT_ACCESS_TOKEN@git.psu.edu/$CI_PROJECT_PATH.git
+  stage: release
+  image: $KUBE_UTILS_URL
+  only:
+  - develop
+  script:
+  - version=`cat version`
+  - let version=$version+1
+  - git checkout -b release/$version develop
+  - echo $version > version
+  - git add . 
+  - git commit -m 'start release $version'
+  - git push --follow-tags $CI_REPOSITORY_URL HEAD:$CI_COMMIT_REF_NAME -q
+  when: manual
+
+
 
 deploy_staging:
   stage: deploy

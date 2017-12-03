@@ -59,6 +59,7 @@ finish_feature:
   - git branch -d $CI_COMMIT_REF_NAME
   - git commit -m 'finish feature $CI_COMMIT_REF_NAME'
   - git push --follow-tags $CI_REPOSITORY_URL -q
+  dependencies: []
 
 start_release:
   variables:

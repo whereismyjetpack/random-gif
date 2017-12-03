@@ -84,19 +84,20 @@ start_release:
   only:
   - develop
   script:
+  - git config --global user.email $GITLAB_USER_EMAIL
+  - git config --global user.name $GITLAB_USER_NAME
+  - git fetch
   - version=`cat version`
   - let version=$version+1
   - git checkout -b release/$version develop
   - echo $version > version
   - git add . 
   - git commit -m 'start release $version'
-  - git push --follow-tags $CI_REPOSITORY_URL HEAD:$CI_COMMIT_REF_NAME -q
+  - git push --follow-tags $CI_REPOSITORY_URL -q
   when: manual
   cache:
     untracked: false
     paths: []
-
-
 
 deploy_staging:
   stage: deploy

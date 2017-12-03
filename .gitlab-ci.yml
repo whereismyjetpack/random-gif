@@ -93,7 +93,7 @@ start_release:
   - echo $version > version
   - git add . 
   - git commit -m 'start release $version'
-  - git push --follow-tags $CI_REPOSITORY_URL -q
+  - git push --all --follow-tags $CI_REPOSITORY_URL -q
   when: manual
   cache:
     untracked: false

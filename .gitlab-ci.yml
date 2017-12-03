@@ -76,6 +76,28 @@ finish_feature:
     untracked: false
     paths: []
 
+finish_release:
+  stage: release
+  when: manual
+  variables:
+    CI_REPOSITORY_URL: https://djb44:$GIT_ACCESS_TOKEN@git.psu.edu/$CI_PROJECT_PATH.git
+  image: $KUBE_UTILS_URL
+  only:
+  - /^release\/.*$/
+  script:
+  - git config --global user.email $GITLAB_USER_EMAIL
+  - git config --global user.name $GITLAB_USER_NAME
+  - git fetch
+  - git checkout $CI_COMMIT_REF_NAME
+  - git checkout master
+  - git merge $CI_COMMIT_REF_NAME
+  - git branch -d $CI_COMMIT_REF_NAME
+  - git push --follow-tags $CI_REPOSITORY_URL --delete $CI_COMMIT_REF_NAME -q
+  - git push --follow-tags $CI_REPOSITORY_URL -q 
+  cache:
+    untracked: false
+    paths: []
+
 start_release:
   variables:
     CI_REPOSITORY_URL: https://djb44:$GIT_ACCESS_TOKEN@git.psu.edu/$CI_PROJECT_PATH.git

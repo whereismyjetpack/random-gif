@@ -44,6 +44,7 @@ deploy_nonprod:
 
 stop_nonprod:
   stage: deploy
+  image: $KUBE_UTILS_URL
   when: manual
   script:
   - for f in deploy/*.tpl; do envtpl $f; done

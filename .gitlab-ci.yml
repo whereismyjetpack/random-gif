@@ -79,6 +79,9 @@ start_release:
   - git commit -m 'start release $version'
   - git push --follow-tags $CI_REPOSITORY_URL HEAD:$CI_COMMIT_REF_NAME -q
   when: manual
+  cache:
+    untracked: false
+    paths: []
 
 
 

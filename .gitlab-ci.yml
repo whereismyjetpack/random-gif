@@ -39,7 +39,19 @@ deploy_nonprod:
   environment:
     name: $CI_COMMIT_REF_SLUG
     url: https://$CI_COMMIT_REF_SLUG-$CI_PROJECT_NAME.$DOMAIN
+    on_stop: stop_nonprod
   dependencies: []
+
+stop_nonprod:
+  stage: deploy
+  when: manual
+  script:
+  - for f in deploy/*.tpl; do envtpl $f; done
+  - kubectl delete -f deploy/
+  environment:
+    name: $CI_COMMIT_REF_SLUG
+    url: https://$CI_COMMIT_REF_SLUG-$CI_PROJECT_NAME.$DOMAIN
+    action: stop
 
 finish_feature:
   stage: feature

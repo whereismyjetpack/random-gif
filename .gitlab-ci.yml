@@ -58,6 +58,7 @@ finish_feature:
   - git merge $CI_COMMIT_REF_NAME
   - git branch -d $CI_COMMIT_REF_NAME
   - git push --follow-tags $CI_REPOSITORY_URL --delete $CI_COMMIT_REF_NAME -q
+  - git push --follow-tags $CI_REPOSITORY_URL -q
   cache:
     untracked: false
     paths: []

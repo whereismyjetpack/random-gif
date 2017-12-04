@@ -8,6 +8,7 @@ variables:
   # variables set in gitlab
   # DOCKER_TOKEN
   # GIT_ACCESS_TOKEN
+  GIT_ACCESS_USER: djb44
   KUBE_UTILS_URL: quay.io/dannbohn/kube-utils:latest
   DOCKER_HOST: tcp://localhost:2375
   DOCKER_REGISTRY: "quay.io"
@@ -49,8 +50,7 @@ stop_nonprod:
   image: $KUBE_UTILS_URL
   when: manual
   script:
-  - for f in deploy/*.tpl; do envtpl $f; done
-  - kubectl delete -f deploy/
+  - destroyer deploy
   environment:
     name: $CI_COMMIT_REF_SLUG
     url: https://$CI_COMMIT_REF_SLUG-$CI_PROJECT_NAME.$DOMAIN
@@ -60,7 +60,7 @@ finish_feature:
   stage: feature
   image: $KUBE_UTILS_URL
   variables:
-    CI_REPOSITORY_URL: https://djb44:$GIT_ACCESS_TOKEN@git.psu.edu/$CI_PROJECT_PATH.git
+    CI_REPOSITORY_URL: https://:$GIT_ACCESS_TOKEN@git.psu.edu/$CI_PROJECT_PATH.git
   when: manual
   only:
   - /^feature\/.*$/
@@ -79,7 +79,7 @@ finish_release:
   stage: release
   when: manual
   variables:
-    CI_REPOSITORY_URL: https://djb44:$GIT_ACCESS_TOKEN@git.psu.edu/$CI_PROJECT_PATH.git
+    CI_REPOSITORY_URL: https://$GIT_ACCESS_USER:$GIT_ACCESS_TOKEN@git.psu.edu/$CI_PROJECT_PATH.git
   image: $KUBE_UTILS_URL
   only:
   - /^release\/.*$/
@@ -96,7 +96,7 @@ finish_release:
 
 start_release:
   variables:
-    CI_REPOSITORY_URL: https://djb44:$GIT_ACCESS_TOKEN@git.psu.edu/$CI_PROJECT_PATH.git
+    CI_REPOSITORY_URL: https://$GIT_ACCESS_USER:$GIT_ACCESS_TOKEN@git.psu.edu/$CI_PROJECT_PATH.git
   stage: release
   image: $KUBE_UTILS_URL
   only:

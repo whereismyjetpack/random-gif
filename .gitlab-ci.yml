@@ -1,9 +1,13 @@
 image: docker:latest
 
 cache:
-  untracked: true
+  untracked: false
+  paths: []
 
 variables:
+  # variables set in gitlab
+  # DOCKER_TOKEN
+  # GIT_ACCESS_TOKEN
   KUBE_UTILS_URL: quay.io/dannbohn/kube-utils:latest
   DOCKER_HOST: tcp://localhost:2375
   DOCKER_REGISTRY: "quay.io"
@@ -24,10 +28,9 @@ stages:
 build:
   stage: build
   script:
-    - docker login -u $DOCKER_USER -p $NEXUS_TOKEN $DOCKER_REGISTRY
+    - docker login -u $DOCKER_USER -p $DOCKER_TOKEN $DOCKER_REGISTRY
     - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG .
     - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
-  dependencies: []
 
 deploy_nonprod:
   stage: deploy
@@ -40,7 +43,6 @@ deploy_nonprod:
     name: $CI_COMMIT_REF_SLUG
     url: https://$CI_COMMIT_REF_SLUG-$CI_PROJECT_NAME.$DOMAIN
     on_stop: stop_nonprod
-  dependencies: []
 
 stop_nonprod:
   stage: deploy
@@ -72,9 +74,6 @@ finish_feature:
   - git branch -d $CI_COMMIT_REF_NAME
   - git push --follow-tags $CI_REPOSITORY_URL --delete $CI_COMMIT_REF_NAME -q
   - git push --follow-tags $CI_REPOSITORY_URL -q
-  cache:
-    untracked: false
-    paths: []
 
 finish_release:
   stage: release
@@ -94,9 +93,6 @@ finish_release:
   - git branch -d $CI_COMMIT_REF_NAME
   - git push --follow-tags $CI_REPOSITORY_URL --delete $CI_COMMIT_REF_NAME -q
   - git push --follow-tags $CI_REPOSITORY_URL -q 
-  cache:
-    untracked: false
-    paths: []
 
 start_release:
   variables:
@@ -117,9 +113,6 @@ start_release:
   - git commit -m 'start release $version'
   - git push --all --follow-tags $CI_REPOSITORY_URL -q
   when: manual
-  cache:
-    untracked: false
-    paths: []
 
 deploy_staging:
   stage: deploy
@@ -131,7 +124,6 @@ deploy_staging:
   environment:
     name: staging
     url: https://staging-$CI_PROJECT_NAME.$DOMAIN
-  dependencies: []
 
 deploy_prod:
   variables:

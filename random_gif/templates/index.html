@@ -1,6 +1,7 @@
 <html>
-<h1><b><font color='black' face='arial'>Random Gif - feature black</font></b></h1>
+<h1><b><font color='black' face='arial'>Random Gif</font></b></h1>
 </br>
+<img src="{{random_gif_url}}" alt="Smiley face" height="42" width="42"> 
 </br>
 <form action "/" method="post">
   <input type='text' name='search'>
@@ -9,6 +10,6 @@
 {% if search %}
 you searched for <b><i><font color='red'>{{serch}}</font></b></i>
 {% endif %}
-<b>{{hostname}}</b>
-<b>{{request.headers}}</b>
+<!-- <b>{{hostname}}</b>
+<b>{{request.headers}}</b> -->
 </html>

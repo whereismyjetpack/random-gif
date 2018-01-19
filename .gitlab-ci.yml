@@ -11,8 +11,8 @@ variables:
   GIT_ACCESS_USER: djb44
   KUBE_UTILS_URL: quay.io/dannbohn/kube-utils:latest
   DOCKER_HOST: tcp://localhost:2375
-  DOCKER_REGISTRY: "quay.io"
-  DOCKER_USER: "dannbohn+robot"
+  DOCKER_REGISTRY: "kubedev.azurecr.io"
+  DOCKER_USER: "kubedev"
   REGISTRY_NAMESPACE: dannbohn
   TRAEFIK_STICKY_SESSIONS: "true"
   DOMAIN: dev.k8s.psu.edu

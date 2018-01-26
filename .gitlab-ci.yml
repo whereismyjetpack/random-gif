@@ -12,8 +12,8 @@ variables:
   GIT_ACCESS_USER: djb44
   KUBE_UTILS_URL: quay.io/dannbohn/kube-utils:latest
   DOCKER_HOST: tcp://localhost:2375
-  DOCKER_REGISTRY: "kubedev.azurecr.io"
-  DOCKER_USER: "kubedev"
+  DOCKER_REGISTRY: "nexus.ci.psu.edu:5000"
+  DOCKER_USER: "deployment"
   REGISTRY_NAMESPACE: dannbohn
   TRAEFIK_STICKY_SESSIONS: "true"
   DOMAIN: dev.k8s.psu.edu
@@ -30,6 +30,7 @@ stages:
 build:
   stage: build
   script:
+    - env
     - docker login -u $DOCKER_USER -p $DOCKER_TOKEN $DOCKER_REGISTRY
     - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG .
     - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME

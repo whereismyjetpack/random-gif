@@ -16,7 +16,7 @@ variables:
   DOCKER_USER: "deployment"
   REGISTRY_NAMESPACE: dannbohn
   TRAEFIK_STICKY_SESSIONS: "true"
-  DOMAIN: dev.k8s.psu.edu
+  DOMAIN: aa.k8s.psu.edu
 
 services:
 - docker:dind

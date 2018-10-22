@@ -8,7 +8,7 @@ variables:
   # variables set in gitlab
   # DOCKER_TOKEN
   # GIT_ACCESS_TOKEN
-  IMAGE_PULL_SECRETS: aks
+  IMAGE_PULL_SECRETS: nexus
   GIT_ACCESS_USER: djb44
   KUBE_UTILS_URL: quay.io/dannbohn/kube-utils:latest
   DOCKER_HOST: tcp://localhost:2375

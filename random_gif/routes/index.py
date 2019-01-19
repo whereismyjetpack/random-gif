@@ -16,6 +16,5 @@ def random_gif():
     #else:
     #    random_gif = gif.random_gif()
     #random_gif_url = random_gif.media_url
-    print('thing 4')
-    return 'thing4'
+    return 'thing1\n'
     #return render_template('index.html', random_gif_url=random_gif_url, search=search, hostname=hostname, request=request)

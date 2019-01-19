@@ -6,15 +6,16 @@ import socket
 
 @app.route('/', methods=('GET', 'POST'))
 def random_gif():
-    gif = giphypop.Giphy()
+    #gif = giphypop.Giphy()
     hostname = socket.gethostname()
-    if request.form:
-        search = request.form.get('search', None)
-    else:
-        search = None
-    if search:
-        random_gif = gif.random_gif(tag=search)
-    else:
-        random_gif = gif.random_gif()
+    #if request.form:
+    #    search = request.form.get('search', None)
+    #else:
+    #    search = None
+    #if search:
+    #    random_gif = gif.random_gif(tag=search)
+    #else:
+    #    random_gif = gif.random_gif()
     random_gif_url = random_gif.media_url
-    return render_template('index.html', random_gif_url=random_gif_url, search=search, hostname=hostname, request=request)
+    return 'Hello, world' 200
+    #return render_template('index.html', random_gif_url=random_gif_url, search=search, hostname=hostname, request=request)

@@ -16,130 +16,18 @@ variables:
   DOCKER_USER: "deployment"
   REGISTRY_NAMESPACE: dannbohn
   TRAEFIK_STICKY_SESSIONS: "true"
-  DOMAIN: aa.k8s.psu.edu
+  DOMAIN: qa.k8s.psu.edu
 
 services:
 - docker:dind
 
 stages:
   - build
-  - feature
-  - release
-  - deploy
 
 build:
   stage: build
   script:
     - env
     - docker login -u $DOCKER_USER -p $DOCKER_TOKEN $DOCKER_REGISTRY
-    - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG .
+    - docker build -t $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHA .
     - docker push $DOCKER_REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
-
-deploy_nonprod:
-  stage: deploy
-  image: $KUBE_UTILS_URL
-  except:
-  - master
-  script:
-    - deployer deploy
-  environment:
-    name: $CI_COMMIT_REF_SLUG
-    url: https://$CI_COMMIT_REF_SLUG-$CI_PROJECT_NAME.$DOMAIN
-    on_stop: stop_nonprod
-
-stop_nonprod:
-  stage: deploy
-  image: $KUBE_UTILS_URL
-  when: manual
-  script:
-  - destroyer deploy
-  environment:
-    name: $CI_COMMIT_REF_SLUG
-    url: https://$CI_COMMIT_REF_SLUG-$CI_PROJECT_NAME.$DOMAIN
-    action: stop
-
-finish_feature:
-  stage: feature
-  image: $KUBE_UTILS_URL
-  variables:
-    CI_REPOSITORY_URL: https://$GIT_ACCESS_USER:$GIT_ACCESS_TOKEN@git.psu.edu/$CI_PROJECT_PATH.git
-  when: manual
-  only:
-  - /^feature\/.*$/
-  script:
-  - git config --global user.email $GITLAB_USER_EMAIL
-  - git config --global user.name $GITLAB_USER_NAME
-  - git fetch
-  - git checkout $CI_COMMIT_REF_NAME
-  - git checkout develop
-  - git merge $CI_COMMIT_REF_NAME
-  - git branch -d $CI_COMMIT_REF_NAME
-  - git push --follow-tags $CI_REPOSITORY_URL --delete $CI_COMMIT_REF_NAME -q
-  - git push --follow-tags $CI_REPOSITORY_URL -q
-
-finish_release:
-  stage: release
-  when: manual
-  variables:
-    CI_REPOSITORY_URL: https://$GIT_ACCESS_USER:$GIT_ACCESS_TOKEN@git.psu.edu/$CI_PROJECT_PATH.git
-  image: $KUBE_UTILS_URL
-  only:
-  - /^release\/.*$/
-  script:
-  - git config --global user.email $GITLAB_USER_EMAIL
-  - git config --global user.name $GITLAB_USER_NAME
-  - git fetch
-  - git checkout $CI_COMMIT_REF_NAME
-  - git checkout master
-  - git merge $CI_COMMIT_REF_NAME
-  - git branch -d $CI_COMMIT_REF_NAME
-  - git push --follow-tags $CI_REPOSITORY_URL --delete $CI_COMMIT_REF_NAME -q
-  - git push --follow-tags $CI_REPOSITORY_URL -q 
-
-start_release:
-  variables:
-    CI_REPOSITORY_URL: https://$GIT_ACCESS_USER:$GIT_ACCESS_TOKEN@git.psu.edu/$CI_PROJECT_PATH.git
-  stage: release
-  image: $KUBE_UTILS_URL
-  only:
-  - develop
-  script:
-  - git config --global user.email $GITLAB_USER_EMAIL
-  - git config --global user.name $GITLAB_USER_NAME
-  - git fetch
-  - version=`cat version`
-  - let version=$version+1
-  - git checkout -b release/$version develop
-  - echo $version > version
-  - git add . 
-  - git commit -m 'start release $version'
-  - git push --all --follow-tags $CI_REPOSITORY_URL -q
-  when: manual
-
-deploy_staging:
-  stage: deploy
-  image: $KUBE_UTILS_URL
-  only:
-  - master
-  script:
-  - deployer deploy
-  environment:
-    name: staging
-    url: https://staging-$CI_PROJECT_NAME.$DOMAIN
-
-deploy_prod:
-  variables:
-    VANITY_DOMAIN: random-gif.psu.edu
-    DOMAIN: qa.k8s.psu.edu
-  when: manual
-  only:
-  - master
-  stage: deploy
-  image: $KUBE_UTILS_URL
-  script:
-  - deployer deploy
-  environment:
-    name: prod
-    url: https://$CI_PROJECT_NAME.$DOMAIN
-  tags:
-  - prod

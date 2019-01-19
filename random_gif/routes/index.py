@@ -7,7 +7,7 @@ import socket
 
 @app.route('/', methods=('GET', 'POST'))
 def random_gif():
-    return_codes = [200,500]
+    return_codes = [200]
     #gif = giphypop.Giphy()
     #if request.form:
     #    search = request.form.get('search', None)

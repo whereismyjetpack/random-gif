@@ -5,6 +5,14 @@ import giphypop
 import socket
 
 
+@app.route('/healthcheck', methods=('GET', 'POST'))
+def health_check():
+    return 'ok', 200
+
+@app.route('/500', methods=('GET', 'POST'))
+def whoops()
+    return 'boom', 500
+
 @app.route('/', methods=('GET', 'POST'))
 def random_gif():
     return_codes = [200]

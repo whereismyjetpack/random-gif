@@ -10,7 +10,7 @@ def health_check():
     return 'ok', 200
 
 @app.route('/500', methods=('GET', 'POST'))
-def whoops()
+def whoops():
     return 'boom', 500
 
 @app.route('/', methods=('GET', 'POST'))

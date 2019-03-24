@@ -12,3 +12,4 @@ steps:
 services:
 - name: docker
   image: docker:dind
+  privileged: true

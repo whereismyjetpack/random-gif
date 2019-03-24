@@ -5,12 +5,6 @@ steps:
 - name: thing
   image: whereismyjetpack/skaffold-kustomize:latest
   environment:
-    DOCKER_HOST: tcp://docker:2375
+    DOCKER_HOST: tcp://localhost:2375
   commands:
   - skaffold build
-
-services:
-- name: docker
-  image: docker:dind
-  privileged: true
-

@@ -3,6 +3,6 @@ name: default
 
 steps:
 - name: build
-  image: whereismyjetpack/skaffold-kustomize:latest
+  image: whereismyjetpack/skaffold-kustomize:foo
   commands:
   - skaffold build

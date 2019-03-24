@@ -1,0 +1,5 @@
+apiVersion: skaffold/v1beta7
+kind: Config
+build:
+  artifacts:
+  - image: quay.io/dannbohn/random-gif

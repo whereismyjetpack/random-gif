@@ -1,0 +1,8 @@
+kind: pipeline
+name: default
+
+steps:
+- name: thing
+  image: whereismyjetpack/skaffold-kustomize:latest
+  commands:
+  - skaffold build

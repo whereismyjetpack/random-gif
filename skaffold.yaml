@@ -2,4 +2,14 @@ apiVersion: skaffold/v1beta7
 kind: Config
 build:
   artifacts:
-  - image: quay.io/dannbohn/random-gif
+    - image: whereismyjetpack/random-gif
+      kaniko:
+        buildContext:
+          localDir: {}
+        cache: {}
+  cluster: 
+    dockerConfig:
+      # path: /tmp/jk
+      secretName: docker-config
+    # pullSecretName: e2esecret
+    # namespace: default

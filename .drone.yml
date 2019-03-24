@@ -2,9 +2,7 @@ kind: pipeline
 name: default
 
 steps:
-- name: thing
+- name: build
   image: whereismyjetpack/skaffold-kustomize:latest
-  environment:
-    DOCKER_HOST: tcp://localhost:2375
   commands:
   - skaffold build

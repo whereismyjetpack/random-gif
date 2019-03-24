@@ -4,10 +4,10 @@ kind: Service
 metadata:
   annotations:
     traefik.backend.loadbalancer.sticky: "true"
-  name: random-gif-feature-foo
+  name: random-gif-develop
   labels:
     app: random-gif
-    ref: "feature-foo"
+    ref: develop
 spec:
   type: ClusterIP
   ports:
@@ -16,4 +16,4 @@ spec:
     protocol: TCP
   selector:
     app: random-gif
-    ref: "feature-foo"
+    ref: develop

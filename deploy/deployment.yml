@@ -2,10 +2,10 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: random-gif-feature-foo
+  name: random-gif-develop
   labels:
     app: random-gif
-    ref: "feature-foo"
+    ref: develop
     user: "4"
     job_number: "9893"
 spec:
@@ -20,9 +20,6 @@ spec:
       - name: random-gif
         imagePullPolicy: Always
         image: "quay.io/dannbohn/random-gif:feature-foo"
-        env:
-        - name: CI_COMMIT_SHA
-          value: "d5d94f21557a021eb83851a3c2d2434d8eec736e"
         ports:
         - containerPort: 8080
         livenessProbe:

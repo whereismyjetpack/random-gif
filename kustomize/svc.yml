@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    traefik.backend.loadbalancer.sticky: "true"
+  name: random-gif-develop
+  labels:
+    app: random-gif
+    ref: develop
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: random-gif
+    ref: develop

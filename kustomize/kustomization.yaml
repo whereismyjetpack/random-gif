@@ -3,3 +3,5 @@ kind: Kustomization
 namespace: default
 resources:
 - deployment.yml
+- svc.yml
+- ing.yml

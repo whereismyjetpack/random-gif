@@ -13,3 +13,6 @@ build:
       secretName: docker-config
     # pullSecretName: e2esecret
     # namespace: default
+deploy:
+  kustomize:
+    path: kustomize

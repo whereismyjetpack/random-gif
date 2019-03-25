@@ -12,5 +12,4 @@ steps:
   commands:
   - sed -i -e "s/__cacert__/$CACERT/g" /root/.kube/config
   - sed -i -e "s/__token__/$TOKEN/g" /root/.kube/config
-  - sleep 90000
   - skaffold build

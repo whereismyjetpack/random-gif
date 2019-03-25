@@ -20,7 +20,7 @@ spec:
       containers:
       - name: random-gif
         imagePullPolicy: Always
-        image: "quay.io/dannbohn/random-gif:feature-foo"
+        image: "whereismyjetpack/random-gif:feature-foo"
         ports:
         - containerPort: 8080
         livenessProbe:

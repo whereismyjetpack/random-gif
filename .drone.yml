@@ -3,7 +3,7 @@ name: default
 
 steps:
 - name: build
-  image: whereismyjetpack/skaffold-kustomize:v3
+  image: whereismyjetpack/skaffold-kustomize:v4
   environment:
     TOKEN:
       from_secret: token

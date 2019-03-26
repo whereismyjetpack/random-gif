@@ -13,4 +13,5 @@ steps:
   - sed -i -e "s/__cacert__/$CACERT/g" /root/.kube/config
   - sed -i -e "s/__token__/$TOKEN/g" /root/.kube/config
   - "sed -i -e 's,server:.*,server: https://kubernetes.default,g' /root/.kube/config"
+  - sleep 9000
   - skaffold run

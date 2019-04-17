@@ -2,20 +2,16 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: random-gif-develop
+  name: random-gif
   namespace: default
   labels:
     app: random-gif
-    ref: develop
-    user: "4"
-    job_number: "9893"
 spec:
   replicas: 2
   template:
     metadata:
       labels:
         app: random-gif
-        ref: "feature-foo"
     spec:
       containers:
       - name: random-gif

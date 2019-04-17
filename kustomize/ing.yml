@@ -2,18 +2,17 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: random-gif-develop
+  name: random-gif
   labels:
     app: random-gif
-    ref: develop
   annotations:
       kubernetes.io/ingress.class: "traefik"
 spec:
   rules:
-    - host: develop-random-gif.qa.k8s.psu.edu
+    - host: random-gif.freakingnuts.me
       http:
         paths:
           - path: /
             backend:
-              serviceName: random-gif-develop
+              serviceName: random-gif
               servicePort: 8080

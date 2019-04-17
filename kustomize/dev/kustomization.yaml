@@ -1,0 +1,10 @@
+bases:
+- ../base
+
+namePrefix: dev-
+
+
+images:
+- name: whereismyjetpack/random-gif
+  newName: whereismyjetpack/random-gif
+  newTag: latest

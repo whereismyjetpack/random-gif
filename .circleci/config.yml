@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-    - image: python:3
+    - image: whereismyjetpack/python-builder:latest
     steps:
     - checkout
     - run:
@@ -13,4 +13,6 @@ jobs:
     - run:
         name: build
         command: |
-          docker build -t foo . 
+          echo "$DOCKER_PASSWORD" | docker login --username whereismyjetpack --password-stdin
+          docker build -t whereismyjetpack/random-gif:$CIRCLE_BUILD_NUM
+          docker push whereismyjetpack/random-gif:$CIRCLE_BUILD_NUM

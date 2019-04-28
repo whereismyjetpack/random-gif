@@ -16,3 +16,13 @@ jobs:
           echo "$DOCKER_PASSWORD" | docker login --username whereismyjetpack --password-stdin
           docker build -t whereismyjetpack/random-gif:$CIRCLE_BUILD_NUM
           docker push whereismyjetpack/random-gif:$CIRCLE_BUILD_NUM
+    - run:
+        name: tag
+        commands: |
+          cd kustomize/base
+          kustomize edit set image whereismyjetpack/random-gif:$CIRCLE_BUILD_NUM
+          git config user.email "circleci@dannbohn.things"
+          git config user.name "circleCI"
+          git add kustomization.yaml
+          git commit -m '[skip-ci] this is a thing'
+          git push 

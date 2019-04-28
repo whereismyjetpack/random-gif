@@ -14,7 +14,7 @@ jobs:
         name: build
         command: |
           echo "$DOCKER_PASSWORD" | docker login --username whereismyjetpack --password-stdin
-          docker build -t whereismyjetpack/random-gif:$CIRCLE_BUILD_NUM
+          docker build -t whereismyjetpack/random-gif:$CIRCLE_BUILD_NUM .
           docker push whereismyjetpack/random-gif:$CIRCLE_BUILD_NUM
     - run:
         name: tag

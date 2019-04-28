@@ -7,4 +7,4 @@ resources:
 - ing.yml
 images:
 - name: whereismyjetpack/random-gif
-  newTag: "9"
+  newTag: "10"

@@ -5,6 +5,3 @@ resources:
 - deployment.yml
 - svc.yml
 - ing.yml
-images:
-- name: whereismyjetpack/random-gif
-  newTag: "30"

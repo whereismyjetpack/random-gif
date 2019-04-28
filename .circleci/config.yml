@@ -18,7 +18,7 @@ jobs:
           docker push whereismyjetpack/random-gif:$CIRCLE_BUILD_NUM
     - run:
         name: tag
-        commands: |
+        command: |
           cd kustomize/base
           kustomize edit set image whereismyjetpack/random-gif:$CIRCLE_BUILD_NUM
           git config user.email "circleci@dannbohn.things"

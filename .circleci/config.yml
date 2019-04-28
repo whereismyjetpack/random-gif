@@ -25,4 +25,4 @@ jobs:
           git config user.name "circleCI"
           git add kustomization.yaml
           git commit -m '[skip ci] this is a thing'
-          git push 
+          git push -u origin $CIRCLE_BRANCH

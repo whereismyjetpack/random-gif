@@ -19,7 +19,7 @@ jobs:
     - run:
         name: tag
         command: |
-          cd kustomize/base/$CIRCLE_BRANCH
+          cd kustomize/$CIRCLE_BRANCH
           kustomize edit set image whereismyjetpack/random-gif:$CIRCLE_BUILD_NUM
           git config user.email "circleci@dannbohn.things"
           git config user.name "circleCI"

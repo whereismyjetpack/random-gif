@@ -5,13 +5,13 @@ bases:
 - ../base
 
 patchesJson6902:
-- target:
+- path: ingress_patch.yaml
+  target:
     group: extensions
-    version: v1beta1
     kind: Ingress
     name: random-gif
-  path: ingress_patch.yaml
+    version: v1beta1
 
 images:
 - name: whereismyjetpack/random-gif
-  newTag: "41"
+  newTag: "43"

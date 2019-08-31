@@ -2,6 +2,10 @@ kind: pipeline
 name: default
 
 steps:
+- name: trigger deployment
+  image: drone/drone
+  commands:
+  - drone deploy whereismyjetpack/random-gif $DRONE_BUILD_NUM production
 - name: build
   image: python:3
   when:

@@ -14,4 +14,4 @@ patchesJson6902:
 
 images:
 - name: whereismyjetpack/random-gif
-  newTag: "53"
+  newTag: "57"

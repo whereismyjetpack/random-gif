@@ -3,7 +3,7 @@ name: default
 
 steps:
 - name: trigger deployment
-  image: drone/drone
+  image: drone/cli
   commands:
   - drone deploy whereismyjetpack/random-gif $DRONE_BUILD_NUM production
 - name: build

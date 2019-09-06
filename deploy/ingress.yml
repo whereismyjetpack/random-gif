@@ -6,11 +6,9 @@ metadata:
   labels:
     app: random-gif
     ref: develop
-  annotations:
-      kubernetes.io/ingress.class: "traefik"
 spec:
   rules:
-    - host: develop-random-gif.qa.k8s.psu.edu
+    - host: develop-random-gif.dsrd.libraries.psu.edu
       http:
         paths:
           - path: /

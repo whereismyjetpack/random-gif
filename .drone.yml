@@ -2,15 +2,19 @@ kind: pipeline
 name: default
 
 steps:
-- name: trigger deployment
-  image: drone/cli
-  commands:
-  - drone deploy whereismyjetpack/random-gif $DRONE_BUILD_NUM production
 - name: build
-  image: python:3
-  when:
-    target:
-    - production
+  image: docker
+  environment:
+    DOCKER_PASSWORD:
+      from_secret: DOCKER_PASSWORD
   commands:
-  - date
-  - ls
+    - export DOCKER_HOST=unix:///var/run/host.sock
+    - docker build -t harbor.dsrd.libraries.psu.edu/library/random-gif:$DRONE_BUILD_NUMBER .
+  volumes:
+  - name: docker-sock
+    path: /var/run/host.sock
+
+volumes:
+- name: docker-sock
+  host:
+    path: /var/run/docker.sock

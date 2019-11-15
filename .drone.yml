@@ -9,7 +9,9 @@ steps:
       from_secret: DOCKER_PASSWORD
   commands:
     - export DOCKER_HOST=unix:///var/run/host.sock
+    - docker login -u 'robot$drone' -p $DOCKER_PASSWORD harbor.dsrd.libraries.psu.edu
     - docker build -t harbor.dsrd.libraries.psu.edu/library/random-gif:$DRONE_BUILD_NUMBER .
+    - docker push harbor.dsrd.libraries.psu.edu/library/random-gif:$DRONE_BUILD_NUMBER
   volumes:
   - name: docker-sock
     path: /var/run/host.sock

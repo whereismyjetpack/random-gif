@@ -19,7 +19,7 @@ spec:
       containers:
       - name: random-gif
         imagePullPolicy: Always
-        image: "quay.io/dannbohn/random-gif:feature-foo"
+        image: harbor.dsrd.libraries.psu.edu/library/random-gif:24
         ports:
         - containerPort: 8080
         livenessProbe:

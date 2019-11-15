@@ -18,6 +18,9 @@ spec:
     spec:
       containers:
       - name: random-gif
+        envFrom:
+        - secretRef:
+            name: random-gif
         imagePullPolicy: Always
         image: harbor.dsrd.libraries.psu.edu/library/random-gif:24
         ports:
